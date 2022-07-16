@@ -1,25 +1,31 @@
-pipeline {
+pipeline{
   environment {
-    repo = "tutorbrijan/dockerpipeline"
+    REPO = 'niranx/demo-pipeline'
   }
+
   agent any
+  
   stages {
-    stage('Docker Build') {
+    stage('Docker Build'){
       steps {
-        sh 'docker build -t $repo:v$BUILD_NUMBER .'
+        sh "docker build -t $REPO:v$BUILD_NUMBER ."
       }
     }
     stage('Docker Push') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-access', usernameVariable: 'User', passwordVariable: 'Password')]) {
+        withCredentials([usernamePassword(
+          credentialsId: 'dockerhub-access',
+          usernameVariable: 'User',
+          usernamePassword: 'Password'
+        )]) {
           sh "docker login -u ${env.User} -p ${env.Password}"
-          sh 'docker push $repo:v$BUILD_NUMBER'
+          sh "docker push $REPO:v$BUILD_NUMBER"
         }
       }
     }
-    stage('Clean docker image') {
+    stage('House Keeping'){
       steps {
-        sh 'docker rmi $repo:v$BUILD_NUMBER'
+        sh "docker rmi $REPO:v$BUILD_NUMBER"
       }
     }
   }
