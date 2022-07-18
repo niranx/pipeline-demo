@@ -16,7 +16,7 @@ pipeline{
         withCredentials([usernamePassword(
           credentialsId: 'dockerhub-access',
           usernameVariable: 'User',
-          usernamePassword: 'Password'
+          passwordVariable: 'Password'
         )]) {
           sh "docker login -u ${env.User} -p ${env.Password}"
           sh "docker push $REPO:v$BUILD_NUMBER"
