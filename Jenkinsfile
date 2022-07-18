@@ -23,7 +23,7 @@ pipeline{
         }
       }
     }
-    stage('House Keeping'){
+    stage('Clean Up'){
       steps {
         sh "docker rmi $REPO:v$BUILD_NUMBER"
       }
